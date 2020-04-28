@@ -1,8 +1,6 @@
 # -*- coding:utf-8 -*-
 import os, configparser
 from Tools.log import FrameLog
-import pandas as pd
-import numpy as np
 import inspect
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -16,7 +14,7 @@ import json
 
 log = FrameLog().log()
 
-NULL_LIST = [np.nan, np.NaN, " ", "", None, "nan", "NaN", "None", "null", []]
+NULL_LIST = [" ", "", None, "nan", "NaN", "None", "null", []]
 
 
 def is_null(tgt):
@@ -25,7 +23,7 @@ def is_null(tgt):
     :param tgt: 输入的string或者unicode
     :return: boolean
     """
-    if tgt not in NULL_LIST and not pd.isnull(tgt):
+    if tgt not in NULL_LIST:
         isnull_res = False
     else:
         isnull_res = True

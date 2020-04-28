@@ -1,15 +1,15 @@
 # -*- coding:utf-8 -*-
 
 # 日志、报告、截图 等路径
-LOGS_DIR = "/Users/micllo/Documents/works/GitHub/pythonSelenium/Logs/"
-REPORTS_DIR = "/Users/micllo/Documents/works/GitHub/pythonSelenium/Reports/"
-SCREENSHOTS_DIR = "/Users/micllo/Documents/works/GitHub/pythonSelenium/Screenshots/"
+LOGS_DIR = "/Users/micllo/Documents/works/GitHub/pythonAppium/Logs/"
+REPORTS_DIR = "/Users/micllo/Documents/works/GitHub/pythonAppium/Reports/"
+SCREENSHOTS_DIR = "/Users/micllo/Documents/works/GitHub/pythonAppium/Screenshots/"
 
 # 服务器地址
 SERVER_IP = "127.0.0.1"
 
 # Nginx 端口
-NGINX_PORT = "8070"
+NGINX_PORT = "6050"
 
 # Mongo 端口
 MONGO_PORT = "27017"
@@ -43,7 +43,7 @@ GRID_REMOTE_ADDR = SERVER_IP + ":5555"  # docker
 
 # mongo 数据库
 MONGODB_ADDR = SERVER_IP + ":" + MONGO_PORT
-MONGODB_DATABASE = "web_auto_test"
+MONGODB_DATABASE = "app_auto_test"
 
 # 报错邮箱地址
 MAIL_LIST = ["micllo@126.com"]

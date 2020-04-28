@@ -44,7 +44,7 @@ GRID_REMOTE_ADDR = SERVER_IP + ":5555"  # docker
 
 # mongo 数据库
 MONGODB_ADDR = SERVER_IP + ":" + MONGO_PORT
-MONGODB_DATABASE = "web_auto_test"
+MONGODB_DATABASE = "app_auto_test"
 
 # 报错邮箱地址
 MAIL_LIST = ["micllo@126.com"]

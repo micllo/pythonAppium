@@ -7,7 +7,6 @@ from Tools.mongodb import MongoGridFS
 from Tools.date_helper import get_date_by_days
 from Tools.mongodb import MongodbUtils
 import unittest
-from Config.pro_config import get_test_class_list_by_pro_name
 from Tools.date_helper import get_current_iso_date
 # sys.path.append("./")
 
@@ -60,52 +59,6 @@ def clear_screen_shot(days):
         log.error("\n清理'" + date_str + "'之前的截图时出错了！\n")
     else:
         log.info("\n已清理'" + date_str + "'之前的截图：" + str(del_num) + " 个\n")
-
-
-def case_import_mongo(pro_name):
-    """
-    更新项目测试用例数据 同步入mongo库中，默认状态为'下线'
-    :param pro_name:
-    :return:
-    【 备 注 】
-    1.run_status ：运行状态 （ pending 待运行、runninng 运行中、stopping 已停止）
-    2.start_time ：运行开始时间
-    3.run_time ：运行时间
-    """
-    test_class_list = get_test_class_list_by_pro_name(pro_name)
-    if test_class_list:
-        insert_list = []
-        test_loader = unittest.TestLoader()
-        for test_class in test_class_list:
-            test_methods_name = test_loader.getTestCaseNames(test_class)
-            for test_method_name in test_methods_name:
-                # 生成'测试方法'的实例对象，并反射获取'测试方法'
-                test_instance = test_class(pro_name=pro_name, test_method=test_method_name)
-                testMethod = getattr(test_instance, test_method_name)
-                # 获取'测试方法'中的备注，作为'测试用例名称'
-                test_case_name = testMethod.__doc__.split("\n")[0].strip()
-                test_case_dict = {}
-                test_case_dict["pro_name"] = pro_name
-                test_case_dict["test_class_name"] = test_class.__name__
-                test_case_dict["test_method_name"] = test_method_name
-                test_case_dict["test_case_name"] = test_case_name
-                test_case_dict["case_status"] = False
-                test_case_dict["run_status"] = "stopping"
-                test_case_dict["start_time"] = "----"
-                test_case_dict["run_time"] = "----"
-                test_case_dict["create_time"] = get_current_iso_date()
-                insert_list.append(test_case_dict)
-        # 将'测试用例'列表更新入对应项目的数据库中
-        with MongodbUtils(ip=cfg.MONGODB_ADDR, database=cfg.MONGODB_DATABASE, collection=pro_name) as pro_db:
-            try:
-                pro_db.drop()
-                pro_db.insert_many(insert_list)
-            except Exception as e:
-                mongo_exception_send_DD(e=e, msg="更新'" + pro_name + "'项目测试用例数据")
-                return "mongo error"
-        return insert_list
-    else:
-        return "no such pro"
 
 
 def update_case_status(pro_name, test_method_name):
