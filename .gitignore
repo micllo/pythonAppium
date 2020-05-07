@@ -22,3 +22,5 @@ node_modules
 nohup.out
 tmp_uwsgi_pid.txt
 Build
+*.png
+*.jpg

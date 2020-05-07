@@ -34,9 +34,9 @@ def swipeDown(driver, t):
 # 屏幕向左滑动
 def swipLeft(driver, t):
     l = getSize(driver)
-    x1 = int(l[0] * 0.75)
-    y1 = int(l[1] * 0.5)
-    x2 = int(l[0] * 0.05)
+    x1 = int(l[0] * 0.75)   # x 坐标
+    y1 = int(l[1] * 0.5)    # y 坐标
+    x2 = int(l[0] * 0.05)   # x 坐标
     driver.swipe(x1, y1, x2, y1, t)
 
 
@@ -51,8 +51,14 @@ def swipRight(driver, t):
 
 desired_caps = {
     'platformName': 'Android',
-    'platformVersion': '7.0',
-    'deviceName': '192.168.31.136:5555',
+    # 小米 5S
+    # 'platformVersion': '7.0',
+    # 'deviceName': '192.168.31.136:5555',
+
+    # 锤子 旧
+    'platformVersion': '7.1.1',
+    'deviceName': '15a6c95a',
+
     # 应用宝 app
     'appPackage': 'com.tencent.android.qqdownloader',
     'appActivity': 'com.tencent.pangu.link.SplashActivity'
@@ -112,3 +118,5 @@ hszz_tab = wait.until(EC.presence_of_element_located((By.XPATH, "/hierarchy/andr
 hszz_tab.click()
 time.sleep(2)
 
+driver.quit()
+time.sleep(2)
