@@ -48,6 +48,9 @@ sudo nginx -s reload
 pip3 install -v flask==0.12 -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
 
 
+#########################################################
+
+
 【 配 置 Android 环 境 】
 
 1.配置相关工具：
@@ -76,6 +79,92 @@ pip3 install -v flask==0.12 -i http://mirrors.aliyun.com/pypi/simple/ --trusted-
 
 
 注意事项：******** 代码调试真机时，必须要在真机上进行授权（仅第一次需要）********
+
+
+
+#########################################################
+
+
+【 配 置 IOS 环 境 】
+
+1.使用 Openatx/Facebook-wda 自动化框架
+  需要开启：
+ （1）模拟器：WDA服务（端口自动映射）
+ （2）真机：WDA服务、映射端口
+
+
+2.使用 appium iOS 自动化框架
+  需要开启：WDA服务、appium服务
+
+
+------------------------------------------
+
+
+【 终端启动 WebDriverAgent 服务命令 】
+命令：xcodebuild -project ../WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination "id=$UDID" test
+    （ $$UDID -> 表示 模拟器 或 真机 的UDID ）
+
+举 例：
+< iPhone 8 模拟器>
+xcodebuild -project /Users/micllo/Documents/works/GitHub/WebDriverAgent/WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination "id=647616B3-44E3-4198-8578-E22FFD8EE43D" test
+< iPhone 11 模拟器>
+xcodebuild -project /Users/micllo/Documents/works/GitHub/WebDriverAgent/WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination "id=5F302EEC-C5AA-489D-924D-45FB91C9C894" test
+# 打开模拟器应用（ 若模拟器未打开的情况 ）
+open "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/"
+
+< iPhone 7 真机>
+xcodebuild -project /Users/micllo/Documents/works/GitHub/WebDriverAgent/WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination "id=3cbb25d055753f2305ec70ba6dede3dca5d500bb" test
+
+
+【 端口映射命令（设备与电脑） 】
+终端执行：iproxy 8100 8100
+验证地址：http://localhost:8100/status
+< 备 注 >
+（1）若使用模拟器：则不需要执行该命令（启动WDA时会自动映射）
+（2）若使用真机：则需要手动执行映射命令
+
+
+【 终端启动 appium desktop 服务命令 】
+1.使用 appium desktop ---> node /Applications/Appium.app/Contents/Resources/app/node_modules/appium/build/lib/main.js --port 4723
+2.使用 appium server  ---> appium appium -a 127.0.0.1 -p 4723 --session-override &
+< 备 注 >
+（1）若使用真机：则不能启动端口映射
+
+
+------------------------------------------
+
+
+【 ios 模拟器管理工具 simctl 】
+
+# 查看模拟器可用列表
+xcrun simctl list
+xcrun simctl list devices
+
+# 创建一个模拟器：（ 通过 list 命令 配置 SimDeviceType、SimRuntime ）
+xcrun simctl create "my_iPhone_11" "com.apple.CoreSimulator.SimDeviceType.iPhone-11" "com.apple.CoreSimulator.SimRuntime.iOS-13-4"
+
+# 为模拟器 重命名
+xcrun simctl rename "A51C1FE6-104E-495B-A839-FDECEB201C9B" "new_iPhone"
+
+# 启动模拟器（通过 list 命令 查看 相应模拟器后面 显示 booted 表示 启动成功）
+xcrun simctl boot "A51C1FE6-104E-495B-A839-FDECEB201C9B"
+（ 关闭 shutdown、删除 delete ）
+
+# 打开模拟器应用
+open "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/"
+
+# 安装应用程序（通过.app 文件）
+xcrun simctl install booted /Users/micllo/Downloads/appium/ios/TestApp.app
+xcrun simctl install "647616B3-44E3-4198-8578-E22FFD8EE43D" /Users/micllo/Downloads/appium/ios/Taobao4iPhone.app
+
+# 启动应用（通过 bundle identifier）
+xcrun simctl launch booted "com.taobao.taobao4iphone"
+xcrun simctl launch "A51C1FE6-104E-495B-A839-FDECEB201C9B" "com.taobao.taobao4iphone"
+（ 关闭 terminate、卸载  uninstall ）
+
+# 打开网页
+xcrun simctl openurl booted "https://www.sogou.com"
+xcrun simctl openurl "A51C1FE6-104E-495B-A839-FDECEB201C9B" "https://www.sogou.com”
 
 
 
@@ -119,90 +208,3 @@ pip3 install -v flask==0.12 -i http://mirrors.aliyun.com/pypi/simple/ --trusted-
 
 
 注意事项：******** 代码调试真机时，必须要在真机上进行授权（仅第一次需要）********
-
-
-
-########################################################################################################################
-
-
-【 配 置 IOS 环 境 】
-
-1.使用 Openatx/Facebook-wda 自动化框架
-  需要开启：WDA服务、映射端口
-
-2.使用 appium iOS 自动化框架
-  需要开启：WDA服务、appium服务
-
-
-------------------------------------------
-
-
-【 终端启动 WebDriverAgent 服务命令 】
-xcodebuild -project ../WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination "id=$UDID" test
-（ $$UDID -> 表示 模拟器 或 真机 的UDID ）
-
-举 例：
-< iPhone 8 模拟器>
-xcodebuild -project /Users/micllo/Documents/works/GitHub/WebDriverAgent/WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination "id=647616B3-44E3-4198-8578-E22FFD8EE43D" test
-< iPhone 11 模拟器>
-xcodebuild -project /Users/micllo/Documents/works/GitHub/WebDriverAgent/WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination "id=5F302EEC-C5AA-489D-924D-45FB91C9C894" test
-# 打开模拟器应用（ 若模拟器未打开的情况 ）
-open "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/"
-
-< iPhone 7 真机>
-xcodebuild -project /Users/micllo/Documents/works/GitHub/WebDriverAgent/WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination "id=3cbb25d055753f2305ec70ba6dede3dca5d500bb" test
-
-
-【 端口映射命令（设备与电脑） 】
-终端执行：iproxy 8100 8100
-验证地址：http://localhost:8100/status
-< 备 注 >
-（1）若使用模拟器：则不需要执行该命令（启动WDA时会自动映射）
-（2）若使用真机：则需要手动执行映射命令
-
-
-【 终端启动 appium desktop 服务命令 】
-1.使用 appium desktop ---> node  /Applications/Appium.app/Contents/Resources/app/node_modules/appium/build/lib/main.js --port 4723
-2.使用 appium server  ---> appium appium -a 127.0.0.1 -p 4723 --session-override &
-< 备 注 >
-（1）若使用真机：则不能启动端口映射
-
-
-------------------------------------------
-
-
-【 ios 模拟器管理工具 simctl 】
-
-# 查看模拟器可用列表
-xcrun simctl list
-xcrun simctl list devices
-
-# 创建一个模拟器：（ 通过 list 命令 配置 SimDeviceType、SimRuntime ）
-xcrun simctl create "my_iPhone_11" "com.apple.CoreSimulator.SimDeviceType.iPhone-11" "com.apple.CoreSimulator.SimRuntime.iOS-13-4"
-
-# 为模拟器 重命名
-xcrun simctl rename "A51C1FE6-104E-495B-A839-FDECEB201C9B" "new_iPhone"
-
-# 启动模拟器（通过 list 命令 查看 相应模拟器后面 显示 booted 表示 启动成功）
-xcrun simctl boot "A51C1FE6-104E-495B-A839-FDECEB201C9B"
-（ 关闭 shutdown、删除 delete ）
-
-# 打开模拟器应用
-open "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/"
-
-# 安装应用程序（通过.app 文件）
-xcrun simctl install booted /Users/micllo/Downloads/appium/ios/TestApp.app
-xcrun simctl install "647616B3-44E3-4198-8578-E22FFD8EE43D" /Users/micllo/Downloads/appium/ios/Taobao4iPhone.app
-
-# 启动应用（通过 bundle identifier）
-xcrun simctl launch booted "com.taobao.taobao4iphone"
-xcrun simctl launch "A51C1FE6-104E-495B-A839-FDECEB201C9B" "com.taobao.taobao4iphone"
-（ 关闭 terminate、卸载  uninstall ）
-
-# 打开网页
-xcrun simctl openurl booted "https://www.sogou.com"
-xcrun simctl openurl "A51C1FE6-104E-495B-A839-FDECEB201C9B" "https://www.sogou.com”
-
-
-
-

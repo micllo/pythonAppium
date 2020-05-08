@@ -5,6 +5,61 @@ from selenium.webdriver.support import expected_conditions as EC
 from appium.webdriver.common.touch_action import TouchAction
 import time
 
+
+# 获得机器屏幕大小x,y
+def getSize(driver):
+    x = driver.get_window_size()['width']
+    y = driver.get_window_size()['height']
+    print(x, y)
+    return x, y
+
+
+# 屏幕向上滑动
+def swipeUp(driver, t):
+    l = getSize(driver)
+    x1 = int(l[0] * 0.5)  # x坐标
+    y1 = int(l[1] * 0.75)  # 起始y坐标
+    y2 = int(l[1] * 0.25)  # 终点y坐标
+    driver.swipe(x1, y1, x1, y2, t)
+
+
+# 屏幕向下滑动
+def swipeDown(driver, t):
+    l = getSize(driver)
+    x1 = int(l[0] * 0.5)  # x坐标
+    y1 = int(l[1] * 0.25)  # 起始y坐标
+    y2 = int(l[1] * 0.75)  # 终点y坐标
+    driver.swipe(x1, y1, x1, y2, t)
+
+
+# 屏幕向左滑动
+def swipLeft(driver, t):
+    l = getSize(driver)
+    x1 = int(l[0] * 0.75)   # x 坐标
+    y1 = int(l[1] * 0.5)    # y 坐标
+    x2 = int(l[0] * 0.05)   # x 坐标
+    driver.swipe(x1, y1, x2, y1, t)
+
+
+# 屏幕向右滑动
+def swipRight(driver, t):
+    l = getSize(driver)
+    x1 = int(l[0] * 0.05)
+    y1 = int(l[1] * 0.5)
+    x2 = int(l[0] * 0.75)
+    driver.swipe(x1, y1, x2, y1, t)
+
+
+# 判断元素是否存在
+def is_element_exist(driver, content):
+    source = driver.page_source
+    # print(source)
+    if content in source:
+        return True
+    else:
+        return False
+
+
 desired_caps = {
     # 基本
     'platformName': 'IOS',
@@ -34,27 +89,58 @@ desired_caps = {
 driver = webdriver.Remote('192.168.31.10:4723/wd/hub', desired_caps)
 driver.implicitly_wait(3)
 
+# 1.从屏幕底部往上划
+swipeUp(driver, 1000)
+time.sleep(2)
+
+# 2.点击 Browse 图标
+driver.find_element_by_xpath('//XCUIElementTypeButton[@name="Browse"]').click()
+time.sleep(2)
+
+# 3.输入框搜索 Heart
+# search_input = driver.find_element_by_xpath('//XCUIElementTypeSearchField[@name="Search"]')
+search_input = driver.find_element_by_name("Search")
+search_input.click()
+time.sleep(1)
+search_input.send_keys("Heart")
+time.sleep(2)
+
+# 4.等待"Nutrition"内容消失
+res1 = is_element_exist(driver, "Nutrition")
+print("内容 Nutrition 是否存在: " + str(res1))
+time.sleep(2)
+
+# 5.判断是否存在"Data"内容
+res2 = is_element_exist(driver, "Data")
+print("内容 Data 是否存在: " + str(res2))
+time.sleep(2)
+
+# 6.点击"Heart Rate"进入
+driver.find_element_by_xpath('(//XCUIElementTypeOther[@name="feeditem_identifier"])[1]/XCUIElementTypeButton').click()
+time.sleep(2)
+
+# 7.点击"Add Data"
+# driver.find_element_by_xpath('//XCUIElementTypeButton[@name="Add Data"]').click()
+driver.find_element_by_name("Add Data").click()
+time.sleep(2)
+
+# 8.在'BPM'中输入 66
+# bpm_input = driver.find_element_by_xpath('//XCUIElementTypeTextField[@name="BPM"]')
+bpm_input = driver.find_element_by_name("BPM")
+bpm_input.click()
+bpm_input.send_keys("66")
+time.sleep(2)
+
+# 9.点击'Add'
+# driver.find_element_by_xpath('//XCUIElementTypeButton[@name="Add"]').click()
+driver.find_element_by_name("Add").click()
+time.sleep(2)
+
+# 10.关闭应用
+driver.quit()
 
 
 
-
-# # 输入第一个数字
-# input_1 = driver.find_element_by_xpath("//XCUIElementTypeTextField[@name=\"IntegerA\"]")
-# input_1.click()
-# input_1.send_keys(1)
-# time.sleep(1)
-#
-# # 输入第二个数字
-# input_2 = driver.find_element_by_xpath("//XCUIElementTypeTextField[@name=\"IntegerB\"]")
-# input_2.click()
-# input_2.send_keys(2)
-# time.sleep(1)
-#
-# # 点击 计算按钮
-# sum_btn = driver.find_element_by_xpath("//XCUIElementTypeButton[@name=\"ComputeSumButton\"]")
-# sum_btn.click()
-# time.sleep(1)
-#
 # # 获取计算结果
 # answer_el = driver.find_element_by_xpath("//XCUIElementTypeStaticText[@name=\"Answer\"]")
 # print(answer_el.text)
@@ -99,8 +185,5 @@ driver.implicitly_wait(3)
 #
 # # time.sleep(2)
 # # print(seekbar_el.text)
-#
-# # 退出应用
-# driver.quit()
-# time.sleep(2)
+
 

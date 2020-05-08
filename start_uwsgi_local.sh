@@ -16,3 +16,6 @@ nohup uwsgi --master --emperor /Users/micllo/Documents/works/GitHub/pythonSeleni
 
 # 杀死 uwsgi 进程
 # ps aux | grep -v 'grep' | grep uwsgi | awk '{print $2}' | xargs kill -9
+
+
+ps aux | grep -v 'grep' | grep xcodebuild | awk '{print $2}' | xargs kill -9
