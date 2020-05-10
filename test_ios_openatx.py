@@ -4,13 +4,15 @@ import time
 wda.DEBUG = False  # 显示每个与WDA服务的HTTP请求的信息
 wda.HTTP_TIMEOUT = 60.0  # 设置与WDA服务的HTTP请求超时时间
 
-c = wda.Client('http://localhost:8100')
+c = wda.Client('http://localhost:8100')  # 设备连接
 print(c.status())
 print()
 
 # 等待 WDA 服务启动
 c.wait_ready(timeout=300)  # 等待300s，默认120s
 
+# 全局默认的元素定位超时时间5秒
+c.implicitly_wait(5.0)
 
 """
     测 试 步 骤
@@ -24,26 +26,42 @@ c.wait_ready(timeout=300)  # 等待300s，默认120s
     8.在'BPM'中输入 33 
     9.点击'Add' 并选择 confirm
 """
+
+# 启动应用 通过 bundleId
 with c.session('com.apple.Health') as s:
 
     # 设置默认的元素定位超时时间5秒
-    s.implicitly_wait(5.0)
+    # s.implicitly_wait(5.0)
 
     # 当前的 bundleId 和 sessinId (会话id)
     print(s.bundle_id, s.id)
 
-    # 1.从屏幕底部往上划
+    # 1.从屏幕'正中间'往'顶部'划动（效果：屏幕往'下'翻动）
     s.swipe_up()
+    # # 从屏幕'正中间'往'底部'划（效果：屏幕往'上'翻动）
+    # s.swipe_down()
+    # # 从屏幕'中间最右侧'往'中间最左侧'划（效果：屏幕往'右'翻动）
+    # s.swipe_left()
+    # # 从屏幕'中间最左侧'往'中间最右侧'划（效果：屏幕往'左'翻动）
+    # s.swipe_right()
     time.sleep(2)
 
     # 2.点击 Browse 图标
     # s.tap(315, 846)
-    s(xpath='//XCUIElementTypeButton[@name="Browse"]').click_exists(timeout=3.0)
+    # s(xpath='//XCUIElementTypeButton[@name="Browse"]').click_exists(timeout=3.0)
+    # s(name='Browse').click_exists(timeout=3.0)
+    s(nameContains='Bro').click_exists(timeout=3.0)  # 匹配name文本包含的内容
     time.sleep(2)
 
     # 3.输入框搜索 Heart
-    search_input = s(xpath='//XCUIElementTypeSearchField[@name="Search"]')
+    # search_input = s(xpath='//XCUIElementTypeSearchField[@name="Search"]')
     # search_input = s(label="Search")
+    search_input = s(name="Search")
+    print("search_input.name : " + str(search_input.name))
+    print("search_input.bounds.x : " + str(search_input.bounds.x))
+    print("search_input.bounds.y : " + str(search_input.bounds.y))
+    print("search_input.bounds.width : " + str(search_input.bounds.width))
+    print("search_input.bounds.height : " + str(search_input.bounds.height))
     search_input.click_exists(timeout=3.0)
     time.sleep(1)
     search_input.set_text("Heart")
@@ -80,9 +98,9 @@ with c.session('com.apple.Health') as s:
     # s(label="Add").click()
     time.sleep(5)
 
-
-
-
+    # 截屏
+    # print(s.screenshot('test_wda.png'))
+    # print(s.screenshot().save("test_wda2.jpg"))
 
 
 
@@ -215,15 +233,6 @@ with c.session('com.apple.Health') as s:
     # s.swipe(x1, y1, x2, y2, 0.5)  # 0.5秒
     # s.swipe(0.5, 0.5, 0.5, 1.0)
     # time.sleep(2)
-    #
-    # # 从屏幕右边往左划
-    # s.swipe_left()
-    # # 从屏幕左边往右划
-    # s.swipe_right()
-    # # 从屏幕底部往上划
-    # s.swipe_up()
-    # # 从屏幕顶部往下划
-    # s.swipe_down()
     #
     # # 长按 1秒
     # # s.tap_hold(x, y, 1.0)

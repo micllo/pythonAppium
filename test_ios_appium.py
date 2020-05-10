@@ -14,40 +14,40 @@ def getSize(driver):
     return x, y
 
 
-# 屏幕向上滑动
-def swipeUp(driver, t):
+# 屏幕向上滑动（效果：屏幕往'下'翻动）
+def swipeUp(driver, t=1000):
     l = getSize(driver)
-    x1 = int(l[0] * 0.5)  # x坐标
-    y1 = int(l[1] * 0.75)  # 起始y坐标
-    y2 = int(l[1] * 0.25)  # 终点y坐标
-    driver.swipe(x1, y1, x1, y2, t)
+    x = int(l[0] * 0.5)    # 固定 x 坐标
+    y1 = int(l[1] * 0.75)  # 起始 y 坐标
+    y2 = int(l[1] * 0.25)  # 终点 y 坐标
+    driver.swipe(x, y1, x, y2, t)
 
 
-# 屏幕向下滑动
-def swipeDown(driver, t):
+# 屏幕向下滑动（效果：屏幕往'上'翻动）
+def swipeDown(driver, t=1000):
     l = getSize(driver)
-    x1 = int(l[0] * 0.5)  # x坐标
-    y1 = int(l[1] * 0.25)  # 起始y坐标
-    y2 = int(l[1] * 0.75)  # 终点y坐标
-    driver.swipe(x1, y1, x1, y2, t)
+    x = int(l[0] * 0.5)    # 固定 x 坐标
+    y1 = int(l[1] * 0.25)  # 起始 y 坐标
+    y2 = int(l[1] * 0.75)  # 终点 y 坐标
+    driver.swipe(x, y1, x, y2, t)
 
 
-# 屏幕向左滑动
-def swipLeft(driver, t):
+# 屏幕向左滑动（效果：屏幕往'右'翻动）
+def swipLeft(driver, t=1000):
     l = getSize(driver)
-    x1 = int(l[0] * 0.75)   # x 坐标
-    y1 = int(l[1] * 0.5)    # y 坐标
-    x2 = int(l[0] * 0.05)   # x 坐标
-    driver.swipe(x1, y1, x2, y1, t)
+    y = int(l[1] * 0.5)     # 固定 y 坐标
+    x1 = int(l[0] * 0.75)   # 起始 x 坐标
+    x2 = int(l[0] * 0.05)   # 终点 x 坐标
+    driver.swipe(x1, y, x2, y, t)
 
 
-# 屏幕向右滑动
-def swipRight(driver, t):
+# 屏幕向右滑动（效果：屏幕往'左'翻动）
+def swipRight(driver, t=1000):
     l = getSize(driver)
-    x1 = int(l[0] * 0.05)
-    y1 = int(l[1] * 0.5)
-    x2 = int(l[0] * 0.75)
-    driver.swipe(x1, y1, x2, y1, t)
+    y = int(l[1] * 0.5)    # 固定 y 坐标
+    x1 = int(l[0] * 0.05)  # 起始 x 坐标
+    x2 = int(l[0] * 0.75)  # 终点 x 坐标
+    driver.swipe(x1, y, x2, y, t)
 
 
 # 判断元素是否存在
@@ -90,11 +90,12 @@ driver = webdriver.Remote('192.168.31.10:4723/wd/hub', desired_caps)
 driver.implicitly_wait(3)
 
 # 1.从屏幕底部往上划
-swipeUp(driver, 1000)
+swipeUp(driver)
 time.sleep(2)
 
 # 2.点击 Browse 图标
-driver.find_element_by_xpath('//XCUIElementTypeButton[@name="Browse"]').click()
+driver.tap([(315, 846)])  # 触摸点击
+# driver.find_element_by_xpath('//XCUIElementTypeButton[@name="Browse"]').click()
 time.sleep(2)
 
 # 3.输入框搜索 Heart
@@ -120,8 +121,9 @@ driver.find_element_by_xpath('(//XCUIElementTypeOther[@name="feeditem_identifier
 time.sleep(2)
 
 # 7.点击"Add Data"
+driver.tap([(360, 70)])
 # driver.find_element_by_xpath('//XCUIElementTypeButton[@name="Add Data"]').click()
-driver.find_element_by_name("Add Data").click()
+# driver.find_element_by_name("Add Data").click()
 time.sleep(2)
 
 # 8.在'BPM'中输入 66
@@ -139,51 +141,7 @@ time.sleep(2)
 # 10.关闭应用
 driver.quit()
 
-
-
-# # 获取计算结果
-# answer_el = driver.find_element_by_xpath("//XCUIElementTypeStaticText[@name=\"Answer\"]")
-# print(answer_el.text)
-# # 隐藏键盘
-# driver.hide_keyboard()
-# # 截屏
+# 截屏
 # driver.get_screenshot_as_file("test1.png")
-#
-#
-# # 点击 弹框按钮 并确认
-# popup_btn = driver.find_element_by_xpath("//XCUIElementTypeButton[@name=\"Check calendar authorized\"]")
-# popup_btn.click()
-# time.sleep(2)
-# driver.get_screenshot_as_file("test2.png")
-#
-# ok_btn = driver.find_element_by_xpath("//XCUIElementTypeButton[@name=\"OK\"]")
-# ok_btn.click()
-# time.sleep(1)
-#
-# # 获取拖动条元素
-# seekbar_el = driver.find_element_by_xpath("//XCUIElementTypeSlider[@name=\"AppElem\"]")
-# print(seekbar_el.text)
-#
-#
-# # # 获取拖动条 高度与宽度
-# # width = seekbar_el.size.get("width")
-# # height = seekbar_el.size.get("height")
-# # print("width : " + str(width))
-# # print("height : " + str(height))
-# #
-# # # 获取拖动条 坐标
-# # x = seekbar_el.location.get("x")
-# # y = seekbar_el.location.get("y")
-# # x2 = int(width * 0.75)
-# # print("x : " + str(x))
-# # print("y : " + str(y))
-# # print("x2 : " + str(x2))
-#
-# # 滑动条：右滑
-# # driver.swipe(x, y, x2, y, 1000)
-# # TouchAction(driver).press(x=149, y=303).move_to(x=189, y=305).release().perform()
-#
-# # time.sleep(2)
-# # print(seekbar_el.text)
 
 
