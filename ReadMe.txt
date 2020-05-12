@@ -65,18 +65,15 @@ pip3 install -v flask==0.12 -i http://mirrors.aliyun.com/pypi/simple/ --trusted-
 
 1.使用 uiautomator 2 自动化框架
 （1）adb连真机命令：adb connect 192.168.31.136:5555
-（2）启动ATX服务命令：python3 -m uiautomator2 init
-   （ 需要在真机上点击允许按钮 ）
+（2）启动 atxserver 服务命令：python3 -m uiautomator2 init
+   （ 注：第一次需要在真机上进行授权 ）
 【 备 注 】ATX服务：通过有线或无线连接设备与电脑后，通过命令将 ATX 应用安装在设备上并启动服务，使设备与电脑保持通信
 
 
 2.使用 appium Android 自动化框架
 （1）adb连真机命令：adb connect 192.168.31.136:5555
 （2）启动appium服务命令：node /Applications/Appium.app/Contents/Resources/app/node_modules/appium/build/lib/main.js --port 4723
-    （ 注：可能需要删除 ATX.apk 应用 ）
-
-
-< 注 意 事 项 >  代码调试真机时，必须要在真机上进行授权（仅第一次需要）
+    （ 注：第一次需要在真机上进行授权、可能需要删除 ATX.apk 应用 ）
 
 
 ------------------------------------------
@@ -228,14 +225,18 @@ xcrun simctl openurl "A51C1FE6-104E-495B-A839-FDECEB201C9B" "https://www.sogou.c
     使用无线连接真机，则需要确保 Docker环境 与 真机 处于同一个网络下
 
 未解决的问题：
-    'appium docker'中无法获取通过'USB'连接的真机设备
+    'Docker'中无法获取通过'USB'连接的真机设备
+
+---------------------------------------
+
+【 使用 appium Android 自动化框架 】
 
 环境配置 方案一：
     若 有些监控的真机无法获取root权限(刷机失败)
-    则 在 linux 上启动一个容器：监控服务(Docker)、
-       在 win10 | mac_mini 上安装两个服务：appium、android sdk
+    则 在 linux 上启动一个容器：监控服务(Docker)
+       在 win10 | mac_mini 上安装两个服务：Android-SDK、appium服务
 
-    Appium服务 无线连接设备
+    无线连接设备（需使用一次USB）
     （1）绑定真机 ：adb connect 192.168.31.136:5555
     （2）查看设备 ：adb devices
     （3）安装待测试apk ：adb -s 192.168.31.136:5555 install yyb.apk
@@ -245,7 +246,7 @@ xcrun simctl openurl "A51C1FE6-104E-495B-A839-FDECEB201C9B" "https://www.sogou.c
     则 在 linux | win10 | mac_mini 上启用两个容器：监控服务(Docker)、Appium服务(Docker) - budtmo/docker-android-real-device
       ( 备注：若 使用 linux 则要确保 linux 与 手机 处于同一网络 )
 
-    Appium服务(Docker) 无线连接设备
+    无线连接设备(Docker）
     （1）绑定真机（不进入容器）：docker exec -it appium_andriod adb connect 192.168.31.136:5555
     （2）查看设备（不进入容器）：docker exec -it appium_andriod adb devices
     （3）安装待测试apk（不进入容器）：docker exec -it appium_andriod adb -s 192.168.31.136:5555 install yyb.apk
@@ -253,5 +254,12 @@ xcrun simctl openurl "A51C1FE6-104E-495B-A839-FDECEB201C9B" "https://www.sogou.c
     Appium服务(Docker)中提供的'noVNC'界面地址来查看'appium log'
     http://docker_ip:6080
 
+---------------------------------------
 
-注意事项：******** 代码调试真机时，必须要在真机上进行授权（仅第一次需要）********
+【 使用 Openatx / uiautomator2 自动化框架 】
+
+环境配置
+    在 linux 上启动一个容器：监控服务(Docker)
+    在 win10 | mac_mini 上安装两个服务：Android-SDK、atxserver服务
+
+
